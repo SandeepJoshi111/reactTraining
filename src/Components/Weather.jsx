@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {useState } from "react";
 //e167a121565880362a4769a2e4acf518 //api code
 
 export default function Weather() {
@@ -86,11 +86,11 @@ function WeatherData(props) {
       <>
         <div className="city-name">
           <h2>
-            {data?.name}, <span>Nepal</span>
+            {data?.name}, <span>{data.sys.country}</span>
           </h2>
         </div>
         <div className="date">
-          <span>November 12 2022</span>
+          <span>25 November 2022</span>
         </div>
 
         <div className="icon-temp">
