@@ -90,7 +90,7 @@ function WeatherData(props) {
           </h2>
         </div>
         <div className="date">
-          <span>25 November 2022</span>
+          <span>{new Date().toISOString()}</span>
         </div>
 
         <div className="icon-temp">
