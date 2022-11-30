@@ -1,46 +1,42 @@
-import { Link, Outlet, Route, Routes } from "react-router-dom";
-import Weather from "./Components/Weather";
-import './App.css'
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import About from "./Routes/About";
+import Home, { fetch } from "./Routes/Home";
+import Root from "./Routes/Root";
+import "./App.css"
+import NewPost, { submitPost } from "./Routes/NewPost";
+import Post, { postLoader } from "./Routes/Post";
 
-export default function App()
-{
-  return(
-    <div className="App">
-    <div>
-      <nav>
-        <ul>
-          <li><Link to='/'>Home</Link></li>
-          <li><Link to='/weather'>Weather</Link></li>
-        </ul>
-      </nav>
-    </div>
-    <Routes>
-      <Route path='/' element={<Home />}>
-        <Route path='/posts' element={<Post />}  />
-        <Route path='/weather' element={<Weather />}  />
+export default function App(){
+  const router = createBrowserRouter([{
+    path:'/',
+    element: <Root />,
+    children: [
+      {
+        path:'/',
+        element:<Home />,
+        loader: fetch
+      },
+      {
+        path:'/about',
+        element:<About />
+      },
+      {
+        path:'/new',
+        element:<NewPost />,
+        action: submitPost,
+        
+      },
+      {
+        path:'/post/:id',
+        element:<Post/>,
+        loader: postLoader
+      }
+    ]
 
-      </Route>
+  }])
 
-      <Route path='/weather' element={<Weather />} />
-    </Routes>
-    </div>
-  );
-}
-
-function Home()
-{
-  return(
-    <>
-    <div>Header</div>
-    <div>Sidebar</div>
-    <Outlet />
-    <div>Footer</div>
-    </>
-  );
-}
-
-function Post(){
-  return(
-    <div>My Posts</div>
-  )
+  return (
+    <RouterProvider router={router}/>
+  
+    )
 }
