@@ -1,24 +1,36 @@
 
-import { Form } from "react-router-dom";
+import { useFormik } from "formik";
 import { create } from "../post";
-
-export async function submitPost(request){
-
-    const data = await request.request.formData();
-    const post ={
-        title: data.get("title"),
-        content: data.get("content")
-
-    };
-
-    await create(post);
-    alert("New Post Created Successfully");
-}
 
 
 
 
 export default function NewPost() {
+
+    const formik = useFormik({
+        initialValues:{
+            title:'',
+            content:''
+        },
+        validate: function(values){
+            let errors ={};
+            if(values.title =='')
+            {
+                errors.title = 'Please Provide a Title Field'
+            }
+
+
+            if(values.content=='')
+            {
+                errors.content= 'Please Provide a Content Field'
+            }
+            return errors;
+        },
+        onSubmit:async function(values){
+            await create(values);
+            alert("Post Created Successfully")
+        }
+    });
     
     return (
         <>
@@ -27,16 +39,28 @@ export default function NewPost() {
                 <span class="subtitle"></span>
             </h1>
 
-            <Form method="post">
+            <form onSubmit={formik.handleSubmit} method="post">
                 <label for="fname">Post Title</label>
-                <input type="text" id="title" name="title" placeholder="Title of the post" />
+                <input type="text" id="title" name="title" onChange={formik.handleChange} value={formik.values.title} 
+                placeholder="Title of the post" />
+                {
+                    formik.errors.title ? (
+                        <small style={{color:'red', display:'block'}}>{formik.errors.title}</small>
+                        )       
+                        :null
+                }
+                
 
                 <label for="content">Content</label>
-                <textarea type="text" id="content" name="content" placeholder=""></textarea>
-
-
-                <input type="submit" value="Submit" />
-            </Form>
+                <textarea type="text" id="content" name="content" onChange={formik.handleChange} value={formik.values.content} placeholder=""></textarea>
+                {
+                    formik.errors.content ? (
+                        <small style={{color:'red', display:'block'}}>{formik.errors.content}</small>
+                        )       
+                        :null
+                }
+                <input type="submit" value={formik.isSubmitting ? 'Submitting...' : 'Submit'} disabled={formik.isSubmitting} />
+            </form>
         </>
     );
 }
